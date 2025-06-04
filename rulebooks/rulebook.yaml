@@ -1,15 +1,13 @@
----
-- name: Listen for events on a webhook
+- name: GitHub Webhook Listener
   hosts: localhost
-
   sources:
     - ansible.eda.webhook:
         host: 0.0.0.0
         port: 5000
-
   rules:
-    - name: Say Hello
-      condition: event.payload.message == "Ansible is super cool"
+    - name: Trigger Job on Push
+      condition: event.payload.repository.name == "eda"
       action:
-        run_playbook:
-          name: say-what.yml
+        run_job_template:
+          name: eda-template
+          organization: Default
